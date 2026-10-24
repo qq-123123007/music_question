@@ -1,7 +1,7 @@
 // 關卡一題庫：顯示圖形，回答這是什麼音符
 const level1Data = [
     { symbol: "𝅗", answer: "全音符" },
-    { symbol: "𝅗𝅥", answer: "二分音符" },
+    { symbol: "𝅗𝅥", answer: "二分音符" },
     { symbol: "♩", answer: "四分音符" },
     { symbol: "♪", answer: "八分音符" },
     { symbol: "𝅘𝅥𝅯", answer: "十六分音符" },
@@ -10,16 +10,30 @@ const level1Data = [
 
 // 關卡二題庫：顯示圖形，回答這是什麼休止符
 const level2Data = [
-    { symbol: "▅", answer: "全休止符" },
-    { symbol: "▆", answer: "二分休止符" },
+    { symbol: "𝄻", answer: "全休止符" },
+    { symbol: "𝄼", answer: "二分休止符" },
     { symbol: "𝄽", answer: "四分休止符" },
     { symbol: "𝄾", answer: "八分休止符" },
     { symbol: "𝄿", answer: "十六分休止符" }
 ];
 
+// 關卡三題庫：附點音符換算，題目會根據附點音符與換算單位不同，問對應等於幾個小音符
+const level3Data = [
+    { symbol: "♩.", answer: "3", unit: "八分音符" },
+    { symbol: "♩.", answer: "6", unit: "十六分音符" },
+    { symbol: "♪.", answer: "3", unit: "十六分音符" },
+    { symbol: "𝅗𝅥.", answer: "3", unit: "四分音符" },
+    { symbol: "𝅗𝅥.", answer: "6", unit: "八分音符" },
+    { symbol: "𝅗𝅥.", answer: "12", unit: "十六分音符" },
+    { symbol: "𝅝.", answer: "3", unit: "二分音符" },
+    { symbol: "𝅝.", answer: "6", unit: "四分音符" },
+    { symbol: "𝅝.", answer: "12", unit: "八分音符" }
+];
+
 // 各關卡對應的選項按鈕池
 const level1Answers = ["全音符", "二分音符", "四分音符", "八分音符", "十六分音符", "三十二分音符"];
 const level2Answers = ["全休止符", "二分休止符", "四分休止符", "八分休止符", "十六分休止符"];
+const level3Answers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
 let currentLevel = 1;
 let score = 0;
@@ -39,12 +53,20 @@ function startLevel(level) {
         document.getElementById('level-badge').innerText = "關卡一：常用音符";
         document.getElementById('level-badge').style.background = "#e2e8f0";
         document.documentElement.style.setProperty('--accent', '#2b6cb0');
-        remainingQuestions = [...level1Data];
-    } else {
+        const randomLevel1Index = Math.floor(Math.random() * level1Data.length);
+        remainingQuestions = [{ ...level1Data[randomLevel1Index] }];
+    } else if (level === 2) {
         document.getElementById('level-badge').innerText = "關卡二：休止符號";
         document.getElementById('level-badge').style.background = "#feebc8";
         document.documentElement.style.setProperty('--accent', '#dd6b20');
-        remainingQuestions = [...level2Data];
+        const randomLevel2Index = Math.floor(Math.random() * level2Data.length);
+        remainingQuestions = [{ ...level2Data[randomLevel2Index] }];
+    } else {
+        document.getElementById('level-badge').innerText = "關卡三：附點音符換算";
+        document.getElementById('level-badge').style.background = "#fbcfe8";
+        document.documentElement.style.setProperty('--accent', '#d946ef');
+        const randomLevel3Index = Math.floor(Math.random() * level3Data.length);
+        remainingQuestions = [{ ...level3Data[randomLevel3Index] }];
     }
     nextQuestion();
 }
@@ -56,8 +78,9 @@ function nextQuestion() {
 
     if (remainingQuestions.length === 0) {
         if (currentLevel === 1) {
-            alert("🎉 恭喜通過第一關【常用音符辨識】，接下來進入第二關【休止符號辨識】！");
             startLevel(2);
+        } else if (currentLevel === 2) {
+            startLevel(3);
         } else {
             showFinalResults();
         }
@@ -65,15 +88,29 @@ function nextQuestion() {
     }
 
     const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
-    // 【修正地方】：加上 [0]，確保抽出來的是物件本身，而不是陣列
     currentQuestion = remainingQuestions.splice(randomIndex, 1)[0]; 
 
-    // 動態修改題目提示文字與圖標
-    const titleText = currentLevel === 1 ? "請問這個符號是什麼音符？" : "請問這個符號是什麼休止符？";
+    let titleText = "";
+    if (currentLevel === 1) {
+        titleText = "請問這個符號是什麼音符？";
+    } else if (currentLevel === 2) {
+        titleText = "請問這個符號是什麼休止符？";
+    } else {
+        titleText = `這個附點音符等於幾個${currentQuestion.unit}？`;
+    }
+
     document.getElementById('question-box-title').firstChild.textContent = titleText + " ";
     document.getElementById('question-text').innerHTML = `<span style="font-size:4.5rem; display:block; margin-top:0.5rem;">${currentQuestion.symbol}</span>`;
 
-    const currentAnswers = currentLevel === 1 ? level1Answers : level2Answers;
+    let currentAnswers = [];
+    if (currentLevel === 1) {
+        currentAnswers = level1Answers;
+    } else if (currentLevel === 2) {
+        currentAnswers = level2Answers;
+    } else {
+        currentAnswers = level3Answers;
+    }
+
     const shuffledAnswers = [...currentAnswers].sort(() => Math.random() - 0.5);
     
     const optionsContainer = document.getElementById('options-container');
