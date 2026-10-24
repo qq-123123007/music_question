@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音樂符號辨識大挑戰</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>🎵 音樂符號辨識大挑戰</h1>
+    
+    <!-- 遊戲主畫面 -->
+    <div id="quiz-game-section">
+        <div class="level-badge" id="level-badge">關卡一：常用音符</div>
+        <div class="score-board">分數: <span id="score">0</span> | 已答題數: <span id="total-questions">0</span></div>
+        
+        <div class="question-box" id="question-box-title">
+            請問這個符號是什麼音符？
+            <span id="question-text" class="question-symbol">♩</span>
+        </div>
+
+        <div class="options-grid" id="options-container"></div>
+
+        <div class="feedback" id="feedback-text"></div>
+        <button class="copy-btn" id="copy-btn" onclick="copyCurrentSymbol()">📋 複製此符號</button>
+        <button class="next-btn" id="next-btn" onclick="handleNext()">下一題 ➔</button>
+    </div>
+
+    <!-- 最終結果畫面 -->
+    <div id="quiz-result-section" class="result-panel">
+        <div class="level-badge" style="background: #e2e8f0; color: #4a5568;">挑戰結束</div>
+        <h2>🎉 恭喜完成全部挑戰！</h2>
+        <div class="result-score" id="final-score-display">0 / 0</div>
+        <div class="result-comment" id="final-comment">太棒了！你對音樂符號已經有基礎的認識囉！</div>
+        <button class="restart-btn" style="display: block;" onclick="restartGame()">🔄 重新挑戰</button>
+    </div>
+</div>
+
+<script src="quiz.js"></script>
+</body>
+</html>
