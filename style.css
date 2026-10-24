@@ -68,6 +68,30 @@ h1 {
     line-height: 5rem;
 }
 
+.time-signature {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 0.9;
+    min-width: 4.5rem;
+    padding: 0.2rem 0.4rem;
+    margin-top: 0.5rem;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.time-signature .top,
+.time-signature .bottom {
+    display: block;
+    font-size: 2.8rem;
+    letter-spacing: 0.05em;
+}
+
+.time-signature .bottom {
+    margin-top: 0.15rem;
+}
+
 .options-grid {
     display: grid;
     grid-template-columns: 1fr 1fr; /* 保持兩欄，但按鈕內字級會隨設定調整 */

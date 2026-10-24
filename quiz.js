@@ -30,10 +30,31 @@ const level3Data = [
     { symbol: "𝅝.", answer: "12", unit: "八分音符" }
 ];
 
+// 關卡四題庫：拍子換算，顯示拍號，回答這個拍子等於幾個四分音符
+const level4Data = [
+    { symbol: "4/4", answer: "4", unit: "四分音符" },
+    { symbol: "3/4", answer: "3", unit: "四分音符" },
+    { symbol: "2/4", answer: "2", unit: "四分音符" },
+    { symbol: "6/8", answer: "3", unit: "四分音符" },
+    { symbol: "12/8", answer: "6", unit: "四分音符" }
+];
+
+// 關卡五題庫：判斷這個拍子是單拍子還是複拍子
+const level5Data = [
+    { symbol: "3/4", answer: "單拍子" },
+    { symbol: "2/4", answer: "單拍子" },
+    { symbol: "4/4", answer: "單拍子" },
+    { symbol: "6/8", answer: "複拍子" },
+    { symbol: "9/8", answer: "複拍子" },
+    { symbol: "12/8", answer: "複拍子" }
+];
+
 // 各關卡對應的選項按鈕池
-const level1Answers = ["全音符", "二分音符", "四分音符", "八分音符", "十六分音符", "三十二分音符"];
-const level2Answers = ["全休止符", "二分休止符", "四分休止符", "八分休止符", "十六分休止符"];
-const level3Answers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+const level1Answers = ["全音符", "二分音符", "四分音符", "八分音符"];
+const level2Answers = ["全休止符", "二分休止符", "四分休止符", "八分休止符"];
+const level3Answers = ["1", "2", "3", "6"];
+const level4Answers = ["2", "3", "4", "6"];
+const level5Answers = ["單拍子", "複拍子"];
 
 let currentLevel = 1;
 let score = 0;
@@ -61,12 +82,24 @@ function startLevel(level) {
         document.documentElement.style.setProperty('--accent', '#dd6b20');
         const randomLevel2Index = Math.floor(Math.random() * level2Data.length);
         remainingQuestions = [{ ...level2Data[randomLevel2Index] }];
-    } else {
+    } else if (level === 3) {
         document.getElementById('level-badge').innerText = "關卡三：附點音符換算";
         document.getElementById('level-badge').style.background = "#fbcfe8";
         document.documentElement.style.setProperty('--accent', '#d946ef');
         const randomLevel3Index = Math.floor(Math.random() * level3Data.length);
         remainingQuestions = [{ ...level3Data[randomLevel3Index] }];
+    } else if (level === 4) {
+        document.getElementById('level-badge').innerText = "關卡四：拍子換算";
+        document.getElementById('level-badge').style.background = "#dbeafe";
+        document.documentElement.style.setProperty('--accent', '#2563eb');
+        const randomLevel4Index = Math.floor(Math.random() * level4Data.length);
+        remainingQuestions = [{ ...level4Data[randomLevel4Index] }];
+    } else {
+        document.getElementById('level-badge').innerText = "關卡五：拍子分類";
+        document.getElementById('level-badge').style.background = "#dcfce7";
+        document.documentElement.style.setProperty('--accent', '#16a34a');
+        const randomLevel5Index = Math.floor(Math.random() * level5Data.length);
+        remainingQuestions = [{ ...level5Data[randomLevel5Index] }];
     }
     nextQuestion();
 }
@@ -81,6 +114,10 @@ function nextQuestion() {
             startLevel(2);
         } else if (currentLevel === 2) {
             startLevel(3);
+        } else if (currentLevel === 3) {
+            startLevel(4);
+        } else if (currentLevel === 4) {
+            startLevel(5);
         } else {
             showFinalResults();
         }
@@ -95,23 +132,45 @@ function nextQuestion() {
         titleText = "請問這個符號是什麼音符？";
     } else if (currentLevel === 2) {
         titleText = "請問這個符號是什麼休止符？";
-    } else {
+    } else if (currentLevel === 3) {
         titleText = `這個附點音符等於幾個${currentQuestion.unit}？`;
+    } else if (currentLevel === 4) {
+        titleText = `這個拍子 ${currentQuestion.symbol} 等於幾個${currentQuestion.unit}？`;
+    } else {
+        titleText = `這個拍子 ${currentQuestion.symbol} 是單拍子還是複拍子？`;
     }
 
     document.getElementById('question-box-title').firstChild.textContent = titleText + " ";
-    document.getElementById('question-text').innerHTML = `<span style="font-size:4.5rem; display:block; margin-top:0.5rem;">${currentQuestion.symbol}</span>`;
+
+    const isTimeSignature = currentLevel >= 4 && currentQuestion.symbol.includes('/');
+    if (isTimeSignature) {
+        const [top, bottom] = currentQuestion.symbol.split('/');
+        document.getElementById('question-text').innerHTML = `
+            <span class="time-signature">
+                <span class="top">${top}</span>
+                <span class="bottom">${bottom}</span>
+            </span>
+        `;
+    } else {
+        document.getElementById('question-text').innerHTML = `<span style="font-size:4.5rem; display:block; margin-top:0.5rem;">${currentQuestion.symbol}</span>`;
+    }
 
     let currentAnswers = [];
     if (currentLevel === 1) {
         currentAnswers = level1Answers;
     } else if (currentLevel === 2) {
         currentAnswers = level2Answers;
-    } else {
+    } else if (currentLevel === 3) {
         currentAnswers = level3Answers;
+    } else if (currentLevel === 4) {
+        currentAnswers = level4Answers;
+    } else {
+        currentAnswers = level5Answers;
     }
 
-    const shuffledAnswers = [...currentAnswers].sort(() => Math.random() - 0.5);
+    const correctAnswer = currentQuestion.answer;
+    const answerPool = currentAnswers.includes(correctAnswer) ? currentAnswers : [correctAnswer, ...currentAnswers.filter(ans => ans !== correctAnswer)].slice(0, 4);
+    const shuffledAnswers = [...answerPool].sort(() => Math.random() - 0.5);
     
     const optionsContainer = document.getElementById('options-container');
     optionsContainer.innerHTML = '';
