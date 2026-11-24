@@ -172,3 +172,82 @@ button.wrong {
     color: #4a5568;
     margin-bottom: 2rem;
 }
+
+.answer-history {
+    max-height: 22rem;
+    overflow-y: auto;
+    margin: 1rem 0 1.5rem;
+    text-align: left;
+}
+
+.answer-history-item {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.75rem;
+    margin-bottom: 0.65rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.answer-history-item.correct {
+    border-left: 5px solid var(--success);
+}
+
+.answer-history-item.wrong {
+    border-left: 5px solid var(--danger);
+}
+
+.answer-history-number {
+    color: #718096;
+    font-weight: bold;
+    text-align: center;
+}
+
+.answer-history-symbol {
+    font-size: 1.35rem;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+}
+
+.answer-history-detail {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.answer-history-detail .player-answer {
+    color: #4a5568;
+}
+
+.answer-history-detail .correct-answer {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.key-staff {
+    width: 100%;
+    max-width: 280px;
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+}
+
+.key-staff .staff-line {
+    stroke: #2d3748;
+    stroke-width: 1.5;
+}
+
+.key-staff .clef-symbol {
+    font-family: "Noto Music", "Segoe UI Symbol", serif;
+    font-size: 58px;
+    fill: var(--accent);
+}
+
+.key-staff .accidental-sharp,
+.key-staff .accidental-flat {
+    font-family: "Noto Music", "Segoe UI Symbol", serif;
+    font-size: 22px;
+    fill: var(--accent);
+}
