@@ -50,73 +50,20 @@ const level5Data = [
     { symbol: "12/8", answer: "複拍子" }
 ];
 
-// 關卡六題庫：在高音或低音譜號的五線譜中辨識調號代表的大調
-const level6KeyData = [
-    { answer: "C 大調", sharps: 0, flats: 0 },
-    { answer: "G 大調", sharps: 1, flats: 0 },
-    { answer: "D 大調", sharps: 2, flats: 0 },
-    { answer: "A 大調", sharps: 3, flats: 0 },
-    { answer: "E 大調", sharps: 4, flats: 0 },
-    { answer: "B 大調", sharps: 5, flats: 0 },
-    { answer: "F 大調", sharps: 0, flats: 1 },
-    { answer: "降 B 大調", sharps: 0, flats: 2 },
-    { answer: "降 E 大調", sharps: 0, flats: 3 },
-    { answer: "降 A 大調", sharps: 0, flats: 4 },
-    { answer: "降 D 大調", sharps: 0, flats: 5 }
-];
+// 關卡六、七、八的大調、音高與調號圖都來自 function.js
+const level6KeyData = majorKeys.map(key => ({
+    answer: key.name,
+    sharps: key.sharps,
+    flats: key.flats
+}));
 
 const level6Answers = level6KeyData.map(key => key.answer);
 
-// 關卡七題庫：高音譜號 C4 至 G5；低音譜號 A2 至 C4
-const level7TrebleData = [
-    { answer: "C", y: 80 },
-    { answer: "D", y: 75 },
-    { answer: "E", y: 70 },
-    { answer: "F", y: 65 },
-    { answer: "G", y: 60 },
-    { answer: "A", y: 55 },
-    { answer: "B", y: 50 },
-    { answer: "C", y: 45 },
-    { answer: "D", y: 40 },
-    { answer: "E", y: 35 },
-    { answer: "F", y: 30 },
-    { answer: "G", y: 25 }
-];
-
-const level7BassData = [
-    { answer: "C", y: 20 },
-    { answer: "B", y: 25 },
-    { answer: "A", y: 30 },
-    { answer: "G", y: 35 },
-    { answer: "F", y: 40 },
-    { answer: "E", y: 45 },
-    { answer: "D", y: 50 },
-    { answer: "C", y: 55 },
-    { answer: "B", y: 60 },
-    { answer: "A", y: 65 }
-];
-
-const level7Data = [
-    ...level7TrebleData.map(item => ({ ...item, clef: "treble" })),
-    ...level7BassData.map(item => ({ ...item, clef: "bass" }))
-];
+const level7Data = ["treble", "bass"].flatMap(clef =>
+    staffNotes[clef].map(note => ({ answer: note.letter, y: note.y, clef }))
+);
 
 const level7Answers = [...new Set(level7Data.map(item => item.answer))];
-
-// 闢卡八題庫：首調唱名法，依隨機大調將音名映射成唱名
-const movableDoMap = {
-    "C 大調": { C: "Do", D: "Re", E: "Mi", F: "Fa", G: "Sol", A: "La", B: "Ti" },
-    "G 大調": { G: "Do", A: "Re", B: "Mi", C: "Fa", D: "Sol", E: "La", "F♯": "Ti" },
-    "D 大調": { D: "Do", E: "Re", "F♯": "Mi", G: "Fa", A: "Sol", B: "La", "C♯": "Ti" },
-    "A 大調": { A: "Do", B: "Re", "C♯": "Mi", D: "Fa", E: "Sol", "F♯": "La", "G♯": "Ti" },
-    "E 大調": { E: "Do", "F♯": "Re", "G♯": "Mi", A: "Fa", B: "Sol", "C♯": "La", "D♯": "Ti" },
-    "B 大調": { B: "Do", "C♯": "Re", "D♯": "Mi", E: "Fa", "F♯": "Sol", "G♯": "La", "A♯": "Ti" },
-    "F 大調": { F: "Do", G: "Re", A: "Mi", "B♭": "Fa", C: "Sol", D: "La", E: "Ti" },
-    "降 B 大調": { "B♭": "Do", C: "Re", D: "Mi", "E♭": "Fa", F: "Sol", G: "La", A: "Ti" },
-    "降 E 大調": { "E♭": "Do", F: "Re", G: "Mi", "A♭": "Fa", "B♭": "Sol", C: "La", D: "Ti" },
-    "降 A 大調": { "A♭": "Do", "B♭": "Re", C: "Mi", "D♭": "Fa", "E♭": "Sol", F: "La", G: "Ti" },
-    "降 D 大調": { "D♭": "Do", "E♭": "Re", F: "Mi", "G♭": "Fa", "A♭": "Sol", "B♭": "La", C: "Ti" }
-};
 
 // 各關卡對應的選項按鈕池
 const level1Answers = [...new Set(level1Data.map(item => item.answer))];
@@ -196,18 +143,8 @@ function startLevel(level) {
         document.getElementById('level-badge').innerText = "關卡八：唱名辨識";
         document.getElementById('level-badge').style.background = "#fef3c7";
         document.documentElement.style.setProperty('--accent', '#d97706');
-        const randomPitch = level7Data[Math.floor(Math.random() * level7Data.length)];
-        const randomKey = level6KeyData[Math.floor(Math.random() * level6KeyData.length)];
-        const movableMapping = movableDoMap[randomKey.answer];
-        const answer = movableMapping[randomPitch.answer] || solfegeMap[randomPitch.answer];
-        remainingQuestions = [{
-            ...randomPitch,
-            ...randomKey,
-            answer,
-            pitchName: randomPitch.answer,
-            majorKey: randomKey.answer,
-            symbol: "𝅝"
-        }];
+        const randomLevel8Index = Math.floor(Math.random() * level8Data.length);
+        remainingQuestions = [{ ...level8Data[randomLevel8Index] }];
     }
     nextQuestion();
 }
@@ -231,8 +168,7 @@ function nextQuestion() {
         } else if (currentLevel === 6) {
             startLevel(7);
         } else if (currentLevel === 7) {
-            //startLevel(8);
-            showFinalResults();
+            startLevel(8);
         } else {
             showFinalResults();
         }
@@ -258,89 +194,25 @@ function nextQuestion() {
     } else if (currentLevel === 7) {
         titleText = `這個音符在五線譜上的位置是？`;
     } else {
-        titleText = `這個音符的固定唱名是？`;
+        titleText = `這個音符的首調唱名是？`;
     }
 
     document.getElementById('question-box-title').firstChild.textContent = titleText + " ";
 
     if (currentLevel === 6) {
-        document.getElementById('question-text').innerHTML = createKeySignatureStaff(currentQuestion);
+        document.getElementById('question-text').innerHTML = showMajorKey(currentQuestion.answer, currentQuestion.clef);
     } else if (currentLevel === 7) {
-        const isTreble = currentQuestion.clef === "treble";
-        const clefSymbol = isTreble ? "𝄞" : "𝄢";
-        const notePosition = currentQuestion.y;
-        const staffLines = [30, 40, 50, 60, 70]
-            .map(y => `<line x1="20" y1="${y}" x2="260" y2="${y}" class="staff-line" />`)
-            .join("");
-        const noteX = 145;
-        const ledgerX1 = noteX - 13;
-        const ledgerX2 = noteX + 13;
-
-        let ledgerLines = "";
-        if (notePosition < 30) {
-            for (let y = 20; y >= notePosition; y -= 10) {
-                ledgerLines += `<line x1="${ledgerX1}" y1="${y}" x2="${ledgerX2}" y2="${y}" class="staff-line" />`;
-            }
-        } else if (notePosition > 70) {
-            for (let y = 80; y <= notePosition; y += 10) {
-                ledgerLines += `<line x1="${ledgerX1}" y1="${y}" x2="${ledgerX2}" y2="${y}" class="staff-line" />`;
-            }
-        }
-
-        document.getElementById('question-text').innerHTML = `
-            <svg class="key-staff" viewBox="0 0 280 100" role="img" aria-label="${isTreble ? '高音譜號' : '低音譜號'}全音符">
-                ${staffLines}
-                ${ledgerLines}
-                <text x="28" y="72" class="clef-symbol">${clefSymbol}</text>
-                <ellipse cx="${noteX}" cy="${notePosition}" rx="7" ry="5" fill="none" stroke="var(--accent)" stroke-width="2.5" />
-            </svg>
-        `;
+        document.getElementById('question-text').innerHTML = createStaffSvg({
+            clef: currentQuestion.clef,
+            noteY: currentQuestion.y
+        });
     } else if (currentLevel === 8) {
-        const isTreble = currentQuestion.clef === "treble";
-        const clefSymbol = isTreble ? "𝄞" : "𝄢";
-        const notePosition = currentQuestion.y;
-        const staffLines = [30, 40, 50, 60, 70]
-            .map(y => `<line x1="20" y1="${y}" x2="260" y2="${y}" class="staff-line" />`)
-            .join("");
-
-        let keyAccidentals = "";
-        const accidentalCount = currentQuestion.sharps || currentQuestion.flats || 0;
-        const isSharpKey = (currentQuestion.sharps || 0) > 0;
-        const treblePositions = isSharpKey
-            ? [30, 45, 25, 40, 55]
-            : [48, 33, 53, 38, 58];
-        const bassPositions = isSharpKey
-            ? [40, 55, 25, 50, 65]
-            : [60, 45, 65, 50, 70];
-        const positions = isTreble ? treblePositions : bassPositions;
-
-        for (let i = 0; i < accidentalCount; i++) {
-            keyAccidentals += `<text x="${78 + i * 16}" y="${positions[i]}" dominant-baseline="middle" class="${isSharpKey ? 'accidental-sharp' : 'accidental-flat'}">${isSharpKey ? '♯' : '♭'}</text>`;
-        }
-
-        let ledgerLines = "";
-        const noteX = 175;
-        const ledgerX1 = noteX - 13;
-        const ledgerX2 = noteX + 13;
-        if (notePosition < 30) {
-            for (let y = 20; y >= notePosition; y -= 10) {
-                ledgerLines += `<line x1="${ledgerX1}" y1="${y}" x2="${ledgerX2}" y2="${y}" class="staff-line" />`;
-            }
-        } else if (notePosition > 70) {
-            for (let y = 80; y <= notePosition; y += 10) {
-                ledgerLines += `<line x1="${ledgerX1}" y1="${y}" x2="${ledgerX2}" y2="${y}" class="staff-line" />`;
-            }
-        }
-
-        document.getElementById('question-text').innerHTML = `
-            <svg class="key-staff" viewBox="0 0 280 100" role="img" aria-label="${isTreble ? '高音譜號' : '低音譜號'}全音符調號">
-                ${staffLines}
-                ${ledgerLines}
-                <text x="28" y="72" class="clef-symbol">${clefSymbol}</text>
-                ${keyAccidentals}
-                <ellipse cx="${noteX}" cy="${notePosition}" rx="7" ry="5" fill="none" stroke="var(--accent)" stroke-width="2.5" />
-            </svg>
-        `;
+        document.getElementById('question-text').innerHTML = createStaffSvg({
+            clef: currentQuestion.clef,
+            noteY: currentQuestion.y,
+            sharps: currentQuestion.sharps,
+            flats: currentQuestion.flats
+        });
     } else {
         const isTimeSignature = currentLevel >= 4 && currentQuestion.symbol && currentQuestion.symbol.includes('/');
         if (isTimeSignature) {
@@ -508,53 +380,24 @@ function copyCurrentSymbol() {
     });
 }
 
-function createKeySignatureStaff(question) {
-    const isTreble = question.clef === "treble";
-    const clefSymbol = isTreble ? "𝄞" : "𝄢";
-
-    let accidentals = "";
-    if (question.sharps > 0) {
-        const treblePositions = [31, 46, 26, 41, 56, 36, 51];
-        const bassPositions = [41, 56, 36, 51, 66, 46, 61];
-        const positions = isTreble ? treblePositions : bassPositions;
-        for (let i = 0; i < question.sharps; i++) {
-            accidentals += `<text x="${78 + i * 16}" y="${positions[i]}" dominant-baseline="middle" class="accidental-sharp">♯</text>`;
-        }
-    } else if (question.flats > 0) {
-        const treblePositions = [48, 33, 53, 38, 58, 43, 63];
-        const bassPositions = [58, 43, 63, 48, 68, 53, 73];
-        const positions = isTreble ? treblePositions : bassPositions;
-        for (let i = 0; i < question.flats; i++) {
-            accidentals += `<text x="${78 + i * 16}" y="${positions[i]}" dominant-baseline="middle" class="accidental-flat">♭</text>`;
-        }
-    }
-
-    const lines = [30, 40, 50, 60, 70]
-        .map(y => `<line x1="20" y1="${y}" x2="260" y2="${y}" class="staff-line" />`)
-        .join("");
-
-    return `
-        <svg class="key-staff" viewBox="0 0 280 100" role="img" aria-label="${isTreble ? '高音譜號' : '低音譜號'}五線譜">
-            ${lines}
-            <text x="28" y="${isTreble ? 70 : 72}" class="clef-symbol">${clefSymbol}</text>
-            ${accidentals}
-        </svg>
-    `;
-}
-
 const level8Data = [];
-for (const major of level6KeyData) {
-    const mapping = movableDoMap[major.answer];
+for (const major of majorKeys) {
     for (const pitch of level7Data) {
-        if (mapping[pitch.answer]) {
-            level8Data.push({
-                ...pitch,
-                answer: mapping[pitch.answer],
-                pitchName: pitch.answer,
-                majorKey: major.answer
-            });
-        }
+        const spelledPitch = spellPitchInKey(pitch.answer, major);
+        const solfege = major.solfege[spelledPitch];
+        if (!solfege) continue;
+        level8Data.push({
+            ...pitch,
+            sharps: major.sharps,
+            flats: major.flats,
+            answer: solfege,
+            pitchName: spelledPitch,
+            majorKey: major.name,
+            symbol: "𝅝"
+        });
     }
 }
+
+const level8Answers = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Ti"];
 
 window.onload = initQuiz;
