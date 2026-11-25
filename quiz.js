@@ -137,7 +137,7 @@ function startLevel(level) {
         const randomPitch = level7Data[Math.floor(Math.random() * level7Data.length)];
         remainingQuestions = [{
             ...randomPitch,
-            symbol: "𝅝"
+            symbol: clefSymbol(randomPitch.clef)
         }];
     } else {
         document.getElementById('level-badge').innerText = "關卡八：唱名辨識";
@@ -393,7 +393,7 @@ for (const major of majorKeys) {
             answer: solfege,
             pitchName: spelledPitch,
             majorKey: major.name,
-            symbol: "𝅝"
+            symbol: `${clefSymbol(pitch.clef)} ${major.name}`
         });
     }
 }

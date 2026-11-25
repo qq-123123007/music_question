@@ -25,6 +25,53 @@ body {
     width: 100%;
     max-width: 500px;
     text-align: center;
+    position: relative;
+}
+
+.back-home {
+    position: absolute;
+    top: 1rem;
+    left: 1.25rem;
+    color: #718096;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.back-home:hover {
+    color: #2d3748;
+}
+
+.home-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.home-link {
+    display: block;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-size: 1.05rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.home-link.teach {
+    background: #d97706;
+}
+
+.home-link.teach:hover {
+    background: #b45309;
+}
+
+.home-link.quiz {
+    background: #3182ce;
+}
+
+.home-link.quiz:hover {
+    background: #2b6cb0;
 }
 
 h1 {

@@ -99,6 +99,10 @@ function getMajorKey(name) {
     return key;
 }
 
+function clefSymbol(clef) {
+    return clef === "bass" ? "𝄢" : "𝄞";
+}
+
 function spellPitchInKey(letter, key) {
     const major = typeof key === "string" ? getMajorKey(key) : key;
     if (major.sharps > 0 && sharpLetters.slice(0, major.sharps).includes(letter)) {
