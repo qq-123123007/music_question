@@ -103,6 +103,34 @@ function clefSymbol(clef) {
     return clef === "bass" ? "𝄢" : "𝄞";
 }
 
+const solfegeOrder = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Ti"];
+
+function staffPlace(y) {
+    const places = {
+        20: "上加一線",
+        25: "上加一間",
+        30: "第五線",
+        35: "第四間",
+        40: "第四線",
+        45: "第三間",
+        50: "第三線",
+        55: "第二間",
+        60: "第二線",
+        65: "第一間",
+        70: "第一線",
+        75: "下加一間",
+        80: "下加一線"
+    };
+    return places[y] || "";
+}
+
+function formatTimeSignature(symbol, extraClass = "") {
+    if (typeof symbol !== "string" || !symbol.includes("/")) return symbol;
+    const [top, bottom] = symbol.split("/");
+    const classes = extraClass ? `time-signature ${extraClass}` : "time-signature";
+    return `<span class="${classes}"><span class="top">${top}</span><span class="bottom">${bottom}</span></span>`;
+}
+
 function spellPitchInKey(letter, key) {
     const major = typeof key === "string" ? getMajorKey(key) : key;
     if (major.sharps > 0 && sharpLetters.slice(0, major.sharps).includes(letter)) {
@@ -121,7 +149,7 @@ function getSolfege(name, letter) {
 
 function createStaffSvg({ clef = "treble", noteY = null, sharps = 0, flats = 0, noteLabels = null } = {}) {
     const isTreble = clef !== "bass";
-    const clefSymbol = isTreble ? "𝄞" : "𝄢";
+    const clefMark = clefSymbol(clef);
     const noteYs = Array.isArray(noteY) ? noteY : (noteY == null ? [] : [noteY]);
     const manyNotes = noteYs.length > 1;
     const width = manyNotes ? 520 : 280;
@@ -170,7 +198,7 @@ function createStaffSvg({ clef = "treble", noteY = null, sharps = 0, flats = 0, 
         <svg class="key-staff${manyNotes ? " scale-staff" : ""}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${label}">
             ${staffLines}
             ${ledgerLines}
-            <text x="28" y="${clefY}" class="clef-symbol">${clefSymbol}</text>
+            <text x="28" y="${clefY}" class="clef-symbol">${clefMark}</text>
             ${accidentals}
             ${note}
             ${labels}
@@ -195,6 +223,6 @@ function showScale(name, clef = "treble") {
         sharps: key.sharps,
         flats: key.flats,
         noteY: noteYs,
-        noteLabels: ["Do", "Re", "Mi", "Fa", "Sol", "La", "Ti", "Do"]
+        noteLabels: solfegeOrder.concat("Do")
     });
 }

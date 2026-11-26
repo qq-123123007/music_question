@@ -70,27 +70,6 @@ const dottedQuarter = "\u2669.";
 const dottedEighth = "\u266A.";
 const dottedHalf = "\u{1D15E}.";
 const dottedWhole = "\u{1D15D}.";
-const solfegeOrder = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Ti"];
-
-function staffPlace(y) {
-    const places = {
-        20: "上加一線",
-        25: "上加一間",
-        30: "第五線",
-        35: "第四間",
-        40: "第四線",
-        45: "第三間",
-        50: "第三線",
-        55: "第二間",
-        60: "第二線",
-        65: "第一間",
-        70: "第一線",
-        75: "下加一間",
-        80: "下加一線"
-    };
-    return places[y] || "";
-}
-
 teachLessons.push(
     {
         title: "附點音符",
@@ -188,13 +167,6 @@ function renderTeachPage() {
     document.getElementById("teach-page-label").textContent = `第 ${pageIndex + 1} 頁，共 ${teachPages.length} 頁`;
 
     const container = document.getElementById("teach-content");
-    const formatSymbol = symbol => {
-        if (typeof symbol === "string" && symbol.includes("/")) {
-            const [top, bottom] = symbol.split("/");
-            return `<span class="time-signature teach-time"><span class="top">${top}</span><span class="bottom">${bottom}</span></span>`;
-        }
-        return symbol;
-    };
     const lessonHtml = pageLessons.map(lesson => {
         const symbol = lesson.symbol
             ? `<div class="teach-symbol" style="color: ${lesson.accent}">${lesson.symbol}</div>`
@@ -212,7 +184,7 @@ function renderTeachPage() {
         const items = lesson.items
             ? `<div class="teach-list">${lesson.items.map(item => `
                     <div class="teach-item">
-                        <div class="teach-item-symbol">${formatSymbol(item.symbol)}</div>
+                        <div class="teach-item-symbol">${formatTimeSignature(item.symbol, "teach-time")}</div>
                         <div class="teach-item-name">${item.name}</div>
                         <div class="teach-item-note">${item.note}</div>
                     </div>

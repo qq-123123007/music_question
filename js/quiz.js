@@ -216,13 +216,7 @@ function nextQuestion() {
     } else {
         const isTimeSignature = currentLevel >= 4 && currentQuestion.symbol && currentQuestion.symbol.includes('/');
         if (isTimeSignature) {
-            const [top, bottom] = currentQuestion.symbol.split('/');
-            document.getElementById('question-text').innerHTML = `
-                <span class="time-signature">
-                    <span class="top">${top}</span>
-                    <span class="bottom">${bottom}</span>
-                </span>
-            `;
+            document.getElementById('question-text').innerHTML = formatTimeSignature(currentQuestion.symbol);
         } else {
             document.getElementById('question-text').innerHTML = `<span style="font-size:4.5rem; display:block; margin-top:0.5rem;">${currentQuestion.symbol}</span>`;
         }
@@ -248,37 +242,11 @@ function nextQuestion() {
     }
 
     const correctAnswer = currentQuestion.answer;
-    let answerPool;
-
-    if (currentLevel === 6) {
-        const wrongAnswers = level6Answers
-            .filter(answer => answer !== correctAnswer)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
-
-        answerPool = [correctAnswer, ...wrongAnswers];
-    } else if (currentLevel === 7) {
-        const wrongAnswers = level7Answers
-            .filter(answer => answer !== currentQuestion.answer)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
-
-        answerPool = [currentQuestion.answer, ...wrongAnswers];
-    } else if (currentLevel === 8) {
-        const wrongAnswers = level8Answers
-            .filter(answer => answer !== correctAnswer)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
-
-        answerPool = [correctAnswer, ...wrongAnswers];
-    } else {
-        const wrongAnswers = currentAnswers
-            .filter(answer => answer !== correctAnswer)
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 3);
-
-        answerPool = [correctAnswer, ...wrongAnswers];
-    }
+    const wrongAnswers = currentAnswers
+        .filter(answer => answer !== correctAnswer)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
+    const answerPool = [correctAnswer, ...wrongAnswers];
 
     const shuffledAnswers = [...answerPool].sort(() => Math.random() - 0.5);
     
@@ -398,6 +366,6 @@ for (const major of majorKeys) {
     }
 }
 
-const level8Answers = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Ti"];
+const level8Answers = solfegeOrder;
 
 window.onload = initQuiz;
