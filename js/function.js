@@ -119,11 +119,15 @@ function getSolfege(name, letter) {
     return key.solfege[spellPitchInKey(letter, key)];
 }
 
-function createStaffSvg({ clef = "treble", noteY = null, sharps = 0, flats = 0 } = {}) {
+function createStaffSvg({ clef = "treble", noteY = null, sharps = 0, flats = 0, noteLabels = null } = {}) {
     const isTreble = clef !== "bass";
     const clefSymbol = isTreble ? "𝄞" : "𝄢";
+    const noteYs = Array.isArray(noteY) ? noteY : (noteY == null ? [] : [noteY]);
+    const manyNotes = noteYs.length > 1;
+    const width = manyNotes ? 520 : 280;
+    const height = noteLabels ? 122 : 100;
     const staffLines = [30, 40, 50, 60, 70]
-        .map(y => `<line x1="20" y1="${y}" x2="260" y2="${y}" class="staff-line" />`)
+        .map(y => `<line x1="20" y1="${y}" x2="${width - 20}" y2="${y}" class="staff-line" />`)
         .join("");
 
     const accidentalCount = sharps || flats || 0;
@@ -137,33 +141,39 @@ function createStaffSvg({ clef = "treble", noteY = null, sharps = 0, flats = 0 }
 
     let ledgerLines = "";
     let note = "";
-    if (noteY != null) {
-        const noteX = accidentalCount > 0 ? 175 : 145;
+    let labels = "";
+    noteYs.forEach((yPosition, index) => {
+        const noteStart = accidentalCount > 0 ? 175 : 145;
+        const noteX = manyNotes ? noteStart + index * 42 : noteStart;
         const ledgerX1 = noteX - 13;
         const ledgerX2 = noteX + 13;
-        if (noteY < 30) {
-            for (let y = 20; y >= noteY; y -= 10) {
+        if (yPosition < 30) {
+            for (let y = 20; y >= yPosition; y -= 10) {
                 ledgerLines += `<line x1="${ledgerX1}" y1="${y}" x2="${ledgerX2}" y2="${y}" class="staff-line" />`;
             }
-        } else if (noteY > 70) {
-            for (let y = 80; y <= noteY; y += 10) {
+        } else if (yPosition > 70) {
+            for (let y = 80; y <= yPosition; y += 10) {
                 ledgerLines += `<line x1="${ledgerX1}" y1="${y}" x2="${ledgerX2}" y2="${y}" class="staff-line" />`;
             }
         }
-        note = `<ellipse cx="${noteX}" cy="${noteY}" rx="7" ry="5" fill="none" stroke="var(--accent)" stroke-width="2.5" />`;
-    }
+        note += `<ellipse cx="${noteX}" cy="${yPosition}" rx="7" ry="5" fill="none" stroke="var(--accent)" stroke-width="2.5" />`;
+        if (noteLabels && noteLabels[index]) {
+            labels += `<text x="${noteX}" y="114" text-anchor="middle" class="solfege-label">${noteLabels[index]}</text>`;
+        }
+    });
 
-    const clefY = noteY == null && isTreble ? 70 : 72;
+    const clefY = noteYs.length === 0 && isTreble ? 70 : 72;
     const clefName = isTreble ? "高音譜號" : "低音譜號";
-    const label = noteY == null ? `${clefName}五線譜` : `${clefName}全音符${accidentalCount > 0 ? "調號" : ""}`;
+    const label = noteYs.length === 0 ? `${clefName}五線譜` : `${clefName}全音符${accidentalCount > 0 ? "調號" : ""}`;
 
     return `
-        <svg class="key-staff" viewBox="0 0 280 100" role="img" aria-label="${label}">
+        <svg class="key-staff${manyNotes ? " scale-staff" : ""}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${label}">
             ${staffLines}
             ${ledgerLines}
             <text x="28" y="${clefY}" class="clef-symbol">${clefSymbol}</text>
             ${accidentals}
             ${note}
+            ${labels}
         </svg>
     `;
 }
@@ -171,4 +181,20 @@ function createStaffSvg({ clef = "treble", noteY = null, sharps = 0, flats = 0 }
 function showMajorKey(name, clef = "treble") {
     const key = getMajorKey(name);
     return createStaffSvg({ clef, sharps: key.sharps, flats: key.flats });
+}
+
+function showScale(name, clef = "treble") {
+    const key = getMajorKey(name);
+    const tonic = Object.entries(key.solfege).find(([, solfege]) => solfege === "Do")[0].replace(/[♯♭]/g, "");
+    const letterIndex = ["C", "D", "E", "F", "G", "A", "B"].indexOf(tonic);
+    let startY = 80 - letterIndex * 5;
+    if (startY - 35 < 18) startY += 35;
+    const noteYs = Array.from({ length: 8 }, (_, index) => startY - index * 5);
+    return createStaffSvg({
+        clef,
+        sharps: key.sharps,
+        flats: key.flats,
+        noteY: noteYs,
+        noteLabels: ["Do", "Re", "Mi", "Fa", "Sol", "La", "Ti", "Do"]
+    });
 }

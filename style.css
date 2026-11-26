@@ -74,6 +74,170 @@ body {
     background: #2b6cb0;
 }
 
+.teach-body {
+    align-items: flex-start;
+    padding: 1.5rem 1rem;
+}
+
+.teach-page {
+    max-width: 560px;
+}
+
+.teach-intro {
+    margin: 0.25rem 0 0.5rem;
+    color: #718096;
+}
+
+.teach-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 1.25rem;
+}
+
+.teach-nav button {
+    background: #3182ce;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+.teach-nav button:disabled {
+    background: #e2e8f0;
+    color: #a0aec0;
+    cursor: default;
+}
+
+.teach-nav span {
+    color: #718096;
+    font-size: 0.9rem;
+}
+
+.teach-card {
+    background: #edf2f7;
+    border-radius: 0.75rem;
+    padding: 1.15rem 1rem 1rem;
+    margin-top: 1rem;
+}
+
+.teach-card h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #1a202c;
+}
+
+.teach-symbol {
+    font-size: 2.6rem;
+    line-height: 1.1;
+    margin: 0.35rem 0;
+}
+
+.teach-card p {
+    margin: 0.35rem 0 0.85rem;
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+.teach-staff-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.teach-staff-row > div {
+    text-align: center;
+}
+
+.teach-staff-row:has(> div:only-child) {
+    grid-template-columns: minmax(0, 280px);
+    justify-content: center;
+}
+
+.teach-label {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 0.15rem;
+}
+
+.teach-caption {
+    margin-top: 0.2rem;
+    color: #4a5568;
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.teach-key-name {
+    margin-bottom: 0.15rem;
+    color: #1a202c;
+    font-weight: bold;
+}
+
+.teach-group-title {
+    grid-column: 1 / -1;
+    margin: 0.85rem 0 0.15rem;
+    font-weight: bold;
+    color: #1a202c;
+    text-align: left;
+}
+
+.teach-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    text-align: left;
+}
+
+.teach-item {
+    display: grid;
+    grid-template-columns: 3.6rem minmax(0, 1fr);
+    gap: 0.35rem 1rem;
+    align-items: center;
+    background: white;
+    border-radius: 0.55rem;
+    padding: 0.7rem 0.8rem;
+}
+
+.teach-item-symbol {
+    font-size: 1.7rem;
+    line-height: 1;
+    text-align: center;
+    color: var(--accent);
+}
+
+.teach-item-symbol .teach-time {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    line-height: 0.9;
+}
+
+.teach-item-symbol .teach-time .top,
+.teach-item-symbol .teach-time .bottom {
+    font-size: 1.35rem;
+    letter-spacing: 0;
+    line-height: 1;
+}
+
+.teach-item-symbol .teach-time .bottom {
+    margin-top: 0.28rem;
+}
+
+.teach-item-name {
+    font-weight: bold;
+    color: #1a202c;
+    padding-left: 0.15rem;
+}
+
+.teach-item-note {
+    grid-column: 2;
+    color: #718096;
+    font-size: 0.82rem;
+    margin-top: 0;
+    padding-left: 0.15rem;
+}
+
 h1 {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
@@ -279,6 +443,38 @@ button.wrong {
     height: 100px;
     display: block;
     margin: 0 auto;
+}
+
+.key-staff.scale-staff {
+    max-width: none;
+    height: 148px;
+}
+
+.key-staff .solfege-label {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    fill: #4a5568;
+}
+
+.teach-staff-stack {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.4rem;
+}
+
+.teach-staff-stack .teach-key-name {
+    margin-bottom: -0.45rem;
+}
+
+.teach-staff-stack .scale-staff {
+    height: 148px;
+    margin-top: -0.35rem;
+    margin-bottom: 0;
+}
+
+.teach-staff-stack .teach-caption {
+    margin-top: 0;
 }
 
 .key-staff .staff-line {
